@@ -1,0 +1,47 @@
+<mujoco model="spherical_robot">
+    <compiler angle="degree" coordinate="local" inertiafromgeom="true"/>
+
+
+    <worldbody>
+        <geom name="floor" type="plane" size="0 0 0.05" rgba="0.8 0.8 0.8 1" condim="3"/>
+
+
+        <body name="robot" pos="0 0 0.11">
+
+            <joint name="slide_x" type="slide" axis="1 0 0" damping="0.5"/>
+            <joint name="slide_y" type="slide" axis="0 1 0" damping="0.5"/>
+            
+            <geom name="robot" type="sphere" size="0.1" mass="1.0" rgba="0.1 0.6 0.9 1" condim="3"/>
+        </body>
+
+        <body name="wall_north" pos="0 3 0.25">
+            <geom type="box" size="3 0.1 0.25" rgba="0.3 0.3 0.3 1"/>
+        </body>
+        <body name="wall_south" pos="0 -3 0.25">
+            <geom type="box" size="3 0.1 0.25" rgba="0.3 0.3 0.3 1"/>
+        </body>
+        <body name="wall_east" pos="3 0 0.25">
+            <geom type="box" size="0.1 3 0.25" rgba="0.3 0.3 0.3 1"/>
+        </body>
+        <body name="wall_west" pos="-3 0 0.25">
+            <geom type="box" size="0.1 3 0.25" rgba="0.3 0.3 0.3 1"/>
+        </body>
+
+        <body name="obstacle_box_1" pos="1.0 1.0 0.2">
+            <geom type="box" size="0.3 0.3 0.2" rgba="0.8 0.2 0.2 1" mass="5.0"/>
+        </body>
+        <body name="obstacle_box_2" pos="-1.2 0.5 0.15">
+            <geom type="box" size="0.4 0.2 0.15" rgba="0.2 0.8 0.2 1" mass="5.0"/>
+        </body>
+        <body name="obstacle_box_3" pos="0.0 -1.5 0.25">
+            <geom type="box" size="0.5 0.2 0.25" rgba="0.8 0.8 0.2 1" mass="5.0"/>
+        </body>
+    </worldbody>
+
+    
+    <actuator>
+        
+        <motor name="actuator_x" joint="slide_x" gear="10.0"/>
+        <motor name="actuator_y" joint="slide_y" gear="10.0"/>
+    </actuator>
+</mujoco>

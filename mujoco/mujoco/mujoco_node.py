@@ -6,6 +6,7 @@ from tf2_ros import TransformBroadcaster
 
 from std_msgs.msg import Float64MultiArray
 from geometry_msgs.msg import Twist
+from rcl_interfaces.msg import ParameterDescriptor
 
 import numpy as np
 
@@ -59,32 +60,29 @@ XML="""
 </mujoco>
 """
 
-def trajetoria(t):
-
-    theta1 = 2 * np.sin(2*np.pi*t/5.0)
-    theta2 = 2* np.sin(2*np.pi*t/10.0)
-
-    return np.array([theta1, theta2])
-
-
 
 class MuJoCoSim(Node):
 
     def __init__(self):
+
         super().__init__('mujoco_node')
         self.get_logger().info('mujoco_node started')
 
-        self.dt = 0.001
+        self.declare_parameter('xmlPath', '')
+        self.declare_parameter('dt', 0.001)
 
-        self.model = mj.load_model_from_xml(XML)
+        self.xmlPath = self.get_parameter('xmlPath').get_parameter_value().string_value
+        self.dt = self.get_parameter('xmlPath').get_parameter_value().double_value
+
+        self.get_logger().info(self.xmlPath)
+
+        self.model = mj.load_model_from_path(self.xmlPath)
         self.sim = mj.MjSim(self.model)
         self.model.opt.timestep = self.dt
         self.viewer = mj.MjViewer(self.sim)
 
         self.n_controls = self.model.nu
 
-        self.sim.data.qpos[0] = trajetoria(0)[0]
-        self.sim.data.qpos[1] = trajetoria(0)[1]
 
         self.simulation_timer = self.create_timer(self.dt, self.update_sim)
         self.viewer_timer = self.create_timer(0.01,  self.viewer.render)
@@ -108,7 +106,6 @@ class MuJoCoSim(Node):
 
         self.xpos = 0.0
         self.ypos = 0.0
-        self.ang_pos = 0.0
 
     def update_sim(self):
 
@@ -151,12 +148,8 @@ class MuJoCoSim(Node):
         self.sim.step()
 
     def vel_callback(self, msg):
-        self.ang_pos += msg.angular.z * self.dt
-        self.xpos += msg.linear.x * np.cos(self.ang_pos) * self.dt
-        self.ypos += msg.linear.x * np.sin(self.ang_pos) * self.dt
-    
-
-
+        self.xpos += msg.linear.x * self.dt
+        self.ypos += msg.angular.z * self.dt
 
 
 def main():
