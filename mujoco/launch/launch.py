@@ -15,7 +15,7 @@ def generate_launch_description():
         output="screen",
         parameters=[
             {"xmlPath": xmlPath},
-            {"dt": 0.001}
+            {"dt": 0.00097}
         ]
     )
 
