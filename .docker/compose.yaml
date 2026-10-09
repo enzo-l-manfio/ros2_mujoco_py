@@ -9,7 +9,7 @@ services:
     devices:
     - /dev/dri:/dev/dri
     group_add:
-      -  "44"
+      - "44"
       - "992"
     environment:
       - DISPLAY=${DISPLAY}

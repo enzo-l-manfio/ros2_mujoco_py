@@ -72,7 +72,7 @@ class MuJoCoSim(Node):
         self.declare_parameter('dt', 0.001)
 
         self.xmlPath = self.get_parameter('xmlPath').get_parameter_value().string_value
-        self.dt = self.get_parameter('xmlPath').get_parameter_value().double_value
+        self.dt = self.get_parameter('dt').get_parameter_value().double_value
 
         self.get_logger().info(self.xmlPath)
 
